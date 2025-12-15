@@ -1,0 +1,8 @@
+build
+*.o
+*.a
+*.so
+/.git
+/.vscode
+venv
+__pycache__

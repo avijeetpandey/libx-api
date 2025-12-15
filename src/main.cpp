@@ -53,7 +53,7 @@ int main() {
     }
   });
 
-  svr.Get(R"(/books/?(")", [&](const httplib::Request &req, httplib::Response &res){
+  svr.Get("/books", [&](const httplib::Request &req, httplib::Response &res){
     auto vec = db.list_books();
     res.set_content(json(vec).dump(), "application/json");
   });
