@@ -53,6 +53,32 @@ Notes & Security
 - Passwords / secrets should be provided via a secret manager / environment variables and not checked into version control.
 - The DB init uses a simple SQL to create the `books` table. You can replace/migrate with a proper migration tool.
 
+Architecture
+------------
+
+The project follows a clear layered design:
+
+- models: `include/models/book.h` (data structures and JSON conversions)
+- providers: `include/providers/*` — data access layer (e.g., `PostgresProvider` implements `IBookProvider`)
+- services: `include/services/*` — business logic and validation (`BookService`)
+- controllers: `include/controllers/*` — HTTP routing and request/response handling (`BookController`)
+
+This separation makes the code testable, clean, and easy to extend.
+
+Running unit tests
+------------------
+
+Unit tests use GoogleTest. If you build locally with CMake you can run:
+
+```bash
+mkdir -p build && cd build
+cmake ..
+make -j
+ctest --output-on-failure
+```
+
+Note: tests are self-contained and use a small fake provider to avoid requiring a running Postgres instance. Integration tests against Postgres can be added later and run inside CI using the `db` service.
+
 Development
 
 To build locally (if you prefer not to use Docker): ensure `libpqxx-dev`, `libssl-dev`, `cmake`, and a C++17 toolchain are installed, then:

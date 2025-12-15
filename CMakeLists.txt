@@ -21,9 +21,27 @@ link_directories(${PQXX_LIBRARY_DIRS})
 
 add_executable(book_inventory
   src/main.cpp
-  src/db.cpp
+  src/providers/postgres_provider.cpp
+  src/controllers/book_controller.cpp
 )
 
 target_include_directories(book_inventory PRIVATE ${OpenSSL_INCLUDE_DIR})
 target_link_libraries(book_inventory PRIVATE ${PQXX_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto pthread)
 target_link_libraries(book_inventory PRIVATE nlohmann_json::nlohmann_json)
+
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG main
+)
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+add_executable(unit_tests
+  tests/book_model_test.cpp
+  tests/book_service_test.cpp
+)
+target_link_libraries(unit_tests PRIVATE gtest_main nlohmann_json::nlohmann_json)
+target_include_directories(unit_tests PRIVATE include)
+add_test(NAME unit_tests COMMAND unit_tests)
