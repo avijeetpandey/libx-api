@@ -1,4 +1,4 @@
-# Book Inventory (C++) — REST Backend
+# LibX :tada: :rocket:
 
 This project implements a simple REST backend for managing a bookstore inventory in modern C++ (C++17) with PostgreSQL as the datastore. The application supports adding, removing, updating books and assigning a book to someone (with due date). Assignment and return operations are protected by an API key (header: `X-API-Key`).
 
