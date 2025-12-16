@@ -33,11 +33,11 @@ void MigrationService::run(const std::string &conninfo) const {
 
   for (auto &f : files) {
     std::ifstream in(f);
-    if (!in) { LOG_WARN("could not open migration", json{{"file", f}}); continue; }
+    if (!in) { json m; m["file"] = f; LOG_WARN("could not open migration", m); continue; }
     std::string name = fs::path(f).filename().string();
     pqxx::work check(conn);
     auto r = check.exec_params("SELECT name FROM schema_migrations WHERE name = $1", name);
-    if (!r.empty()) { LOG_INFO("migration already applied", {{"file", name}}); continue; }
+    if (!r.empty()) { json m; m["file"] = name; LOG_INFO("migration already applied", m); continue; }
     check.commit();
 
     std::string sql((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
@@ -46,9 +46,9 @@ void MigrationService::run(const std::string &conninfo) const {
       apply.exec(sql);
       apply.exec_params("INSERT INTO schema_migrations (name) VALUES ($1)", name);
       apply.commit();
-      LOG_INFO("applied migration", json{{"file", name}});
+      json m; m["file"] = name; LOG_INFO("applied migration", m);
     } catch (const std::exception &e) {
-      LOG_ERROR("migration failed", json{{"file", name}, {"error", e.what()}});
+      json m; m["file"] = name; m["error"] = e.what(); LOG_ERROR("migration failed", m);
       throw;
     }
   }
