@@ -24,6 +24,7 @@ add_executable(book_inventory
   src/providers/postgres_provider.cpp
   src/controllers/book_controller.cpp
 )
+target_sources(book_inventory PRIVATE src/services/auth_service.cpp)
 
 target_include_directories(book_inventory PRIVATE ${OpenSSL_INCLUDE_DIR})
 target_link_libraries(book_inventory PRIVATE ${PQXX_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto pthread)
@@ -45,3 +46,9 @@ add_executable(unit_tests
 target_link_libraries(unit_tests PRIVATE gtest_main nlohmann_json::nlohmann_json)
 target_include_directories(unit_tests PRIVATE include)
 add_test(NAME unit_tests COMMAND unit_tests)
+
+add_executable(auth_unit_tests tests/auth_service_test.cpp)
+target_link_libraries(auth_unit_tests PRIVATE gtest_main nlohmann_json::nlohmann_json OpenSSL::SSL OpenSSL::Crypto)
+target_include_directories(auth_unit_tests PRIVATE include)
+add_test(NAME auth_unit_tests COMMAND auth_unit_tests)
+target_sources(auth_unit_tests PRIVATE src/services/auth_service.cpp)

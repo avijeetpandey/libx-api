@@ -1,0 +1,18 @@
+repos:
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: clang-format
+        entry: bash scripts/format.sh
+        language: script
+        types: [file]
+      - id: clang-tidy
+        name: clang-tidy
+        entry: bash scripts/lint.sh
+        language: script
+        types: [file]
+      - id: run-tests
+        name: run-tests
+        entry: bash -lc "mkdir -p build && cd build && cmake .. && make -j && ctest --output-on-failure"
+        language: script
+        types: [file]
