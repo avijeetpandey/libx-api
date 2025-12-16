@@ -33,7 +33,7 @@ void MigrationService::run(const std::string &conninfo) const {
 
   for (auto &f : files) {
     std::ifstream in(f);
-    if (!in) { LOG_WARN("could not open migration", {{"file", f}}); continue; }
+    if (!in) { LOG_WARN("could not open migration", json{{"file", f}}); continue; }
     std::string name = fs::path(f).filename().string();
     pqxx::work check(conn);
     auto r = check.exec_params("SELECT name FROM schema_migrations WHERE name = $1", name);
@@ -46,9 +46,9 @@ void MigrationService::run(const std::string &conninfo) const {
       apply.exec(sql);
       apply.exec_params("INSERT INTO schema_migrations (name) VALUES ($1)", name);
       apply.commit();
-      LOG_INFO("applied migration", {{"file", name}});
+      LOG_INFO("applied migration", json{{"file", name}});
     } catch (const std::exception &e) {
-      LOG_ERROR("migration failed", {{"file", name}, {"error", e.what()}});
+      LOG_ERROR("migration failed", json{{"file", name}, {"error", e.what()}});
       throw;
     }
   }
