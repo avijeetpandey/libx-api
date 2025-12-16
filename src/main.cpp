@@ -38,9 +38,14 @@ int main() {
 
   BookService service(pg);
 
+  // AuthService configuration from env
+    std::string jwt_secret = getenv_or("ADMIN_JWT_SECRET", "change-me-secret");
+    std::string admin_user = getenv_or("ADMIN_USER", "admin");
+    std::string admin_pass = getenv_or("ADMIN_PASSWORD", "password");
+    AuthService auth(jwt_secret);
+
   httplib::Server svr;
-  std::string admin_key = getenv_or("ADMIN_API_KEY", "");
-  BookController controller(svr, service, admin_key);
+    BookController controller(svr, service, auth);
 
   std::cout << "Starting server on 0.0.0.0:8080" << std::endl;
   svr.listen("0.0.0.0", 8080);
