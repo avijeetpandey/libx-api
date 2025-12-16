@@ -23,8 +23,13 @@ add_executable(book_inventory
   src/main.cpp
   src/providers/postgres_provider.cpp
   src/controllers/book_controller.cpp
+  src/controllers/docs_controller.cpp
+  src/services/migration_service.cpp
+  src/metrics/metrics.cpp
+  src/logging/logger.cpp
 )
 target_sources(book_inventory PRIVATE src/services/auth_service.cpp)
+
 
 target_include_directories(book_inventory PRIVATE ${OpenSSL_INCLUDE_DIR})
 target_link_libraries(book_inventory PRIVATE ${PQXX_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto pthread)
@@ -42,6 +47,8 @@ enable_testing()
 add_executable(unit_tests
   tests/book_model_test.cpp
   tests/book_service_test.cpp
+  tests/migration_service_test.cpp
+  tests/metrics_test.cpp
 )
 target_link_libraries(unit_tests PRIVATE gtest_main nlohmann_json::nlohmann_json)
 target_include_directories(unit_tests PRIVATE include)
@@ -52,3 +59,8 @@ target_link_libraries(auth_unit_tests PRIVATE gtest_main nlohmann_json::nlohmann
 target_include_directories(auth_unit_tests PRIVATE include)
 add_test(NAME auth_unit_tests COMMAND auth_unit_tests)
 target_sources(auth_unit_tests PRIVATE src/services/auth_service.cpp)
+
+add_executable(docs_unit_tests tests/docs_test.cpp)
+target_link_libraries(docs_unit_tests PRIVATE gtest_main nlohmann_json::nlohmann_json)
+target_include_directories(docs_unit_tests PRIVATE include)
+

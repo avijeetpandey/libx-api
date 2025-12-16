@@ -1,0 +1,33 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Book Inventory API",
+    "version": "1.0.0",
+    "description": "OpenAPI spec for the Book Inventory service"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": {"200": {"description": "OK"}}
+      }
+    },
+    "/auth/token": {
+      "post": {
+        "summary": "Issue JWT token",
+        "requestBody": {"content": {"application/json": {"schema": {"type":"object","properties":{"username":{"type":"string"},"password":{"type":"string"}}}}}},
+        "responses": {"200": {"description": "Token issued"}}
+      }
+    },
+    "/books": {
+      "get": {"summary": "List books"},
+      "post": {"summary": "Create book"}
+    },
+    "/books/{id}/assign": {
+      "post": {"summary": "Assign a book (requires auth)"}
+    },
+    "/metrics": {
+      "get": {"summary": "Prometheus metrics"}
+    }
+  }
+}
